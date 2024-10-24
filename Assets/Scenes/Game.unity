@@ -1783,7 +1783,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3298c44df0adeb046a14931f11307439, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _appVoiceExperience: {fileID: 2047802327}
+  _playerInput: {fileID: 718848688}
 --- !u!114 &718848688
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1827,7 +1827,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _appVoiceExperience: {fileID: 2047802327}
-  _playerInput: {fileID: 718848688}
 --- !u!1001 &759095798
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -4152,6 +4151,7 @@ GameObject:
   m_Component:
   - component: {fileID: 2047802326}
   - component: {fileID: 2047802327}
+  - component: {fileID: 2047802328}
   m_Layer: 0
   m_Name: App Voice Experience
   m_TagString: Untagged
@@ -4286,6 +4286,19 @@ MonoBehaviour:
   usePlatformServices: 0
   enableConsoleLogging: 0
   sendTranscriptionEventsForMessages: 0
+--- !u!114 &2047802328
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2047802325}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c84e099543ae490298b8bca768f31108, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _appVoiceExperience: {fileID: 2047802327}
 --- !u!1 &2109590121
 GameObject:
   m_ObjectHideFlags: 0
