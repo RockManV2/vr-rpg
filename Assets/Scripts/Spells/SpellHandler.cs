@@ -13,8 +13,6 @@ public class SpellHandler : MonoBehaviour
     [SerializeField] private PlayerInput _playerInput;
     
     public readonly Dictionary<string, Action<string>> Spells = new();
-
-    public delegate void PhraseProcessedCallback(string phrase);
     
     private void Awake()
     {
