@@ -1,14 +1,13 @@
-using System.Threading.Tasks;
+
 using Oculus.Voice;
 using UnityEngine;
+using UnityEngine.Events;
 
 public class VoiceManager : MonoBehaviour
 {
     public static VoiceManager Instance;
 
     [SerializeField] private AppVoiceExperience _appVoiceExperience;
-
-    private string _processedText = string.Empty;
 
     private void Awake()
     {
@@ -18,31 +17,15 @@ public class VoiceManager : MonoBehaviour
             Destroy(gameObject);
     }
 
-    private void Start()
+    public void RequestPlayerVoice(UnityAction<string> callback)
     {
-        _appVoiceExperience.VoiceEvents.OnFullTranscription.AddListener(GetVoiceText);
-    }
+        if (_appVoiceExperience.Active) return;
+        
+        _appVoiceExperience.VoiceEvents.OnFullTranscription.AddListener(callback);
 
-    private void GetVoiceText(string phrase)
-    {
-        _processedText = phrase;
-    }
-    
-    public async Task<string> GetVoiceTextAsync()
-    {
+        _appVoiceExperience.VoiceEvents.OnRequestCompleted.AddListener(
+            _appVoiceExperience.VoiceEvents.OnFullTranscription.RemoveAllListeners);
+
         _appVoiceExperience.Activate();
-
-        await Task.Run(() => {
-            while (string.IsNullOrEmpty(_processedText))
-            {
-                Debug.Log("getting voiceline");
-            }
-        });
-
-        string result = _processedText;
-        
-        _processedText = string.Empty;
-        
-        return result;
     }
 }

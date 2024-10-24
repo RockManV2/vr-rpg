@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using Oculus.Voice;
 using UnityEngine;
+using UnityEngine.Events;
 using UnityEngine.InputSystem;
 
 public class SpellHandler : MonoBehaviour
@@ -13,6 +14,8 @@ public class SpellHandler : MonoBehaviour
     
     public readonly Dictionary<string, Action<string>> Spells = new();
 
+    public delegate void PhraseProcessedCallback(string phrase);
+    
     private void Awake()
     {
         _voiceHandler = new VoiceHandler();
@@ -20,24 +23,22 @@ public class SpellHandler : MonoBehaviour
 
     private void OnEnable()
     {
-        _playerInput.actions["Voice"].performed += CastSpell;
+        _playerInput.actions["Voice"].performed += OnCastSpellPressed;
     }
     
     private void OnDisable()
     {
-        _playerInput.actions["Voice"].performed -= CastSpell;
+       _playerInput.actions["Voice"].performed -= OnCastSpellPressed;
     }
-
-    private async void CastSpell(InputAction.CallbackContext _)
+    
+    private void OnCastSpellPressed(InputAction.CallbackContext _)
     {
-        Debug.Log("CastSpell Started");
-        var phraseTask = VoiceManager.Instance.GetVoiceTextAsync();
-        var phrase = await Task.WhenAll(phraseTask);
-
-        Debug.Log("voiceline regocnized");
-        Debug.Log(phrase[0]);
-        
-        PhraseData phraseData = _voiceHandler.ProcessPhrase(phrase[0]);
+        VoiceManager.Instance.RequestPlayerVoice(CastSpell);
+    }
+    
+    private void CastSpell(string phrase)
+    {
+        PhraseData phraseData = _voiceHandler.ProcessPhrase(phrase);
 
         if (!phraseData.IsValid)
         {
