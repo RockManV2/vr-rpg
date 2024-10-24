@@ -82,8 +82,8 @@
                 },
                 {
                     "name": "",
-                    "id": "054f59c4-f8f4-440a-8b2f-03da4c7f1331",
-                    "path": "<XRController>{RightHand}/{Submit}",
+                    "id": "efe03eea-2dba-412c-89cf-5aa56bf11206",
+                    "path": "<Keyboard>/v",
                     "interactions": "",
                     "processors": "",
                     "groups": "",
@@ -93,8 +93,19 @@
                 },
                 {
                     "name": "",
-                    "id": "efe03eea-2dba-412c-89cf-5aa56bf11206",
-                    "path": "<Keyboard>/v",
+                    "id": "132a43f4-4521-41ce-9aaa-ddcb35781676",
+                    "path": "<XRController>{RightHand}/{PrimaryTrigger}",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Voice",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "11fb81d7-c3d0-485a-9d1a-e5620b4c2b90",
+                    "path": "<XRController>{RightHand}/{PrimaryButton}",
                     "interactions": "",
                     "processors": "",
                     "groups": "",
