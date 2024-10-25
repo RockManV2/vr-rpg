@@ -9,6 +9,7 @@ using UnityEngine.UIElements;
 public class DialogueGraph : EditorWindow
 {
     private DialogueGraphView _graphView;
+    private string _fileName = "New Narrative";
     
     [MenuItem("Graph/Dialogue graph")]
     public static void OpenDialogueGraphWindow()
@@ -21,12 +22,37 @@ public class DialogueGraph : EditorWindow
     {
         var toolBar = new Toolbar();
 
+        var fileNameTextField = new TextField("FileName");
+        fileNameTextField.SetValueWithoutNotify(_fileName);
+        fileNameTextField.MarkDirtyRepaint();
+        fileNameTextField.RegisterValueChangedCallback(evt => _fileName = evt.newValue);
+        toolBar.Add(fileNameTextField);
+
+        toolBar.Add(new Button(() => RequestDataOperation(true)){text = "Save Data"});
+        toolBar.Add(new Button(() => RequestDataOperation(false)){text = "Load Data"});
+        
         var nodeCreateButton = new Button(() => { _graphView.CreateNode("Dialogue Node"); });
         nodeCreateButton.text = "Create Node";
         toolBar.Add(nodeCreateButton);
         
         rootVisualElement.Add(toolBar);
 
+    }
+
+    private void RequestDataOperation(bool save)
+    {
+        if (string.IsNullOrEmpty(_fileName))
+        {
+            EditorUtility.DisplayDialog("Invalid File Name!", "Please enter a valid file name.", "OK");
+            return;
+        }
+
+        var saveUtility = GraphSaveUtility.GetInstance(_graphView);
+        
+        if(save)
+            saveUtility.SaveGraph(_fileName);
+        else
+            saveUtility.LoadGraph(_fileName);
     }
 
     private void OnEnable()
