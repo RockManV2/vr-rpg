@@ -1,4 +1,3 @@
-
 using System.Collections.Generic;
 using System.Linq;
 using UnityEditor;
@@ -10,10 +9,10 @@ public class GraphSaveUtility
 {
     private DialogueGraphView _targetGraphView;
     private DialogueContainer _containerCache;
-    
+
     private List<Edge> _edges => _targetGraphView.edges.ToList();
     private List<DialogueNode> _nodes => _targetGraphView.nodes.ToList().Cast<DialogueNode>().ToList();
-    
+
     public static GraphSaveUtility GetInstance(DialogueGraphView targetGrapghView)
     {
         return new GraphSaveUtility
@@ -43,7 +42,7 @@ public class GraphSaveUtility
             });
         }
 
-        foreach (var dialogueNode in _nodes.Where(node=>!node.EntryPoint))
+        foreach (var dialogueNode in _nodes.Where(node => !node.EntryPoint))
         {
             dialogueContainer.DialogueNodeData.Add(new DialogueNodeData
             {
@@ -52,13 +51,13 @@ public class GraphSaveUtility
                 Position = dialogueNode.GetPosition().position
             });
         }
-        
+
         if (!AssetDatabase.IsValidFolder("Assets/Resources"))
             AssetDatabase.CreateFolder("Assets", "Resources");
-            
+
         if (!AssetDatabase.IsValidFolder("Assets/Resources/Dialogue"))
             AssetDatabase.CreateFolder("Assets/Resources", "Dialogue");
-        
+
         AssetDatabase.CreateAsset(dialogueContainer, $"Assets/Resources/Dialogue/{fileName}.asset");
         AssetDatabase.SaveAssets();
     }
@@ -88,10 +87,10 @@ public class GraphSaveUtility
                 var targetNodeGuid = connections[j].TargetNodeGuid;
                 var targetNode = _nodes.First(x => x.Guid == targetNodeGuid);
                 LinkNodes(_nodes[i].outputContainer[j].Q<Port>(), (Port)targetNode.inputContainer[0]);
-                
+
                 targetNode.SetPosition(
                     new Rect(_containerCache.DialogueNodeData.First(x => x.Guid == targetNodeGuid).Position,
-                    _targetGraphView.DefaultNodeSize
+                        _targetGraphView.DefaultNodeSize
                     )
                 );
             }
@@ -105,7 +104,7 @@ public class GraphSaveUtility
             output = output,
             input = input,
         };
-        
+
         tempEdge?.input.Connect(tempEdge);
         tempEdge?.output.Connect(tempEdge);
         _targetGraphView.Add(tempEdge);
@@ -120,13 +119,14 @@ public class GraphSaveUtility
             _targetGraphView.AddElement(tempNode);
 
             var nodePorts = _containerCache.NodeLinks.Where(x => x.BaseNodeGuid == nodeData.Guid).ToList();
-            nodePorts.ForEach(x => _targetGraphView.AddChoisePort(tempNode,x.PortName));
+            nodePorts.ForEach(x => _targetGraphView.AddChoisePort(tempNode, x.PortName));
         }
     }
 
     private void ClearGraph()
     {
-        _nodes.Find(x => x.EntryPoint).Guid = _containerCache.NodeLinks[0].BaseNodeGuid;
+        if(_containerCache.NodeLinks.Count > 0)
+            _nodes.Find(x => x.EntryPoint).Guid = _containerCache.NodeLinks[0].BaseNodeGuid;
 
         foreach (var node in _nodes)
         {
@@ -135,7 +135,7 @@ public class GraphSaveUtility
 
             _edges.Where(x => x.input.node == node).ToList()
                 .ForEach(edge => _targetGraphView.RemoveElement(edge));
-            
+
             _targetGraphView.RemoveElement(node);
         }
     }

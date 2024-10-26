@@ -12,10 +12,16 @@ public class DialogueGraph : EditorWindow
     private string _fileName = "New Narrative";
     
     [MenuItem("Graph/Dialogue graph")]
-    public static void OpenDialogueGraphWindow()
+    public static void OpenDialogueGraphWindow(string graphName = "")
     {
         var window = GetWindow<DialogueGraph>();
         window.titleContent = new GUIContent("Dialogue Graph");
+
+        if (graphName == "") return;
+        
+        window.SetFileName(graphName);
+        window.RequestDataOperation(false);
+        window.rootVisualElement.Q<Toolbar>().Q<TextField>().SetValueWithoutNotify(graphName);
     }
 
     private void GenerateToolBar()
@@ -75,7 +81,10 @@ public class DialogueGraph : EditorWindow
         
         _graphView.StretchToParentSize();
         rootVisualElement.Add(_graphView);
-        
-        
+    }
+
+    private void SetFileName(string fileName)
+    {
+        _fileName = fileName;
     }
 }
