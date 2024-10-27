@@ -47,7 +47,9 @@ public class GraphSaveUtility
             dialogueContainer.DialogueNodeData.Add(new DialogueNodeData
             {
                 Guid = dialogueNode.Guid,
+                NodeType = dialogueNode.NodeType,
                 DialogueText = dialogueNode.DialogueText,
+                Quest = dialogueNode.Quest,
                 Position = dialogueNode.GetPosition().position
             });
         }
@@ -114,12 +116,23 @@ public class GraphSaveUtility
     {
         foreach (var nodeData in _containerCache.DialogueNodeData)
         {
-            var tempNode = _targetGraphView.CreateDialogueNode(nodeData.DialogueText);
+            DialogueNode tempNode = null;
+            switch (nodeData.NodeType)
+            {
+                case NodeType.Dialogue:
+                {
+                    tempNode = _targetGraphView.CreateDialogueNode(nodeData.DialogueText);
+                    var nodePorts = _containerCache.NodeLinks.Where(x => x.BaseNodeGuid == nodeData.Guid).ToList();
+                    nodePorts.ForEach(x => _targetGraphView.AddChoicePort(tempNode, x.PortName));
+                    break;
+                }
+                case NodeType.Quest:
+                    tempNode = _targetGraphView.CreateQuestNode(nodeData.DialogueText, nodeData.Quest);
+                    break;
+            }
+            
             tempNode.Guid = nodeData.Guid;
             _targetGraphView.AddElement(tempNode);
-
-            var nodePorts = _containerCache.NodeLinks.Where(x => x.BaseNodeGuid == nodeData.Guid).ToList();
-            nodePorts.ForEach(x => _targetGraphView.AddChoisePort(tempNode, x.PortName));
         }
     }
 

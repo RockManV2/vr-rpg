@@ -54,8 +54,8 @@ public class DialogueGraph : EditorWindow
         objectLabel.style.paddingBottom = 10;
         toolBar.Add(objectLabel);
         
-        toolBar.Add(new Button(() => _graphView.CreateNode("Dialogue Node")) { text = "Create Dialogue Node" });
-        toolBar.Add(new Button(() => _graphView.CreateQuestdNode("Quest Node")) { text = "Create Quest Node" });
+        toolBar.Add(new Button(() => _graphView.AddDialogueNode("Dialogue Node")) { text = "Create Dialogue Node" });
+        toolBar.Add(new Button(() => _graphView.AddQuestNode("Quest Node")) { text = "Create Quest Node" });
         toolBar.Add(new Button(() => Debug.Log("Not Implemented")) { text = "Create Execution Node" });
         
         rootVisualElement.Add(toolBar);
