@@ -10,11 +10,7 @@ public class DialogueVendorEditor : Editor
     {
         DialogueVendor vendor = (DialogueVendor)target;
         
-        GUILayout.Label(vendor.Guid);
-        
-        if(vendor.Guid == string.Empty)
-            if(GUILayout.Button("Generate vendor Guid"))
-                GenerateNewGuid(vendor);
+        GUILayout.Label($"Vendor Guid:\n{vendor.Guid}");
         
         if(Resources.Load<DialogueContainer>($"Dialogue/{vendor.Guid}") == null)
             if(GUILayout.Button("Generate new dialogue asset"))
@@ -24,12 +20,7 @@ public class DialogueVendorEditor : Editor
             if(GUILayout.Button("Open dialogue asset"))
                 OpenDialogueAsset(vendor);
     }
-
-    private void GenerateNewGuid(DialogueVendor vendor)
-    {
-        vendor.Guid = Guid.NewGuid().ToString();
-    }
-
+    
     private void GenerateNewDialogueAsset(DialogueVendor vendor)
     {
         var dialogueContainer = CreateInstance<DialogueContainer>();

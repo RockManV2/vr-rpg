@@ -1,4 +1,3 @@
-
 using System;
 using UnityEditor;
 using UnityEditor.UIElements;
@@ -10,7 +9,7 @@ public class DialogueGraph : EditorWindow
 {
     private DialogueGraphView _graphView;
     private string _fileName = "New Narrative";
-    
+
     [MenuItem("Graph/Dialogue graph")]
     public static void OpenDialogueGraphWindow(string graphName = "")
     {
@@ -18,32 +17,50 @@ public class DialogueGraph : EditorWindow
         window.titleContent = new GUIContent("Dialogue Graph");
 
         if (graphName == "") return;
-        
+
         window.SetFileName(graphName);
         window.RequestDataOperation(false);
         window.rootVisualElement.Q<Toolbar>().Q<TextField>().SetValueWithoutNotify(graphName);
     }
 
-    private void GenerateToolBar()
+    private void GenerateToolbar()
     {
         var toolBar = new Toolbar();
 
-        var fileNameTextField = new TextField("FileName");
+        toolBar.style.width = 170;
+        toolBar.style.height = 999;
+        
+        toolBar.style.flexDirection = FlexDirection.Column;
+        toolBar.style.alignSelf = Align.FlexEnd;
+        
+        var fileLabel = new Label("Title") { text = "File Options" };
+        fileLabel.style.alignSelf = Align.Center;
+        fileLabel.style.paddingTop = 10;
+        fileLabel.style.paddingBottom = 10;
+        toolBar.Add(fileLabel);
+        
+        var fileNameTextField = new TextField();
         fileNameTextField.SetValueWithoutNotify(_fileName);
         fileNameTextField.MarkDirtyRepaint();
         fileNameTextField.RegisterValueChangedCallback(evt => _fileName = evt.newValue);
         toolBar.Add(fileNameTextField);
 
-        toolBar.Add(new Button(() => RequestDataOperation(true)){text = "Save Data"});
-        toolBar.Add(new Button(() => RequestDataOperation(false)){text = "Load Data"});
+        toolBar.Add(new Button(() => RequestDataOperation(true)) { text = "Save Data" });
+        toolBar.Add(new Button(() => RequestDataOperation(false)) { text = "Load Data" });
+
+        var objectLabel = new Label("Title") { text = "Create Object" };
+        objectLabel.style.alignSelf = Align.Center;
+        objectLabel.style.paddingTop = 10;
+        objectLabel.style.paddingBottom = 10;
+        toolBar.Add(objectLabel);
         
-        var nodeCreateButton = new Button(() => { _graphView.CreateNode("Dialogue Node"); });
-        nodeCreateButton.text = "Create Node";
-        toolBar.Add(nodeCreateButton);
+        toolBar.Add(new Button(() => _graphView.CreateNode("Dialogue Node")) { text = "Create Dialogue Node" });
+        toolBar.Add(new Button(() => _graphView.CreateQuestdNode("Quest Node")) { text = "Create Quest Node" });
+        toolBar.Add(new Button(() => Debug.Log("Not Implemented")) { text = "Create Execution Node" });
         
         rootVisualElement.Add(toolBar);
-
     }
+    
 
     private void RequestDataOperation(bool save)
     {
@@ -54,8 +71,8 @@ public class DialogueGraph : EditorWindow
         }
 
         var saveUtility = GraphSaveUtility.GetInstance(_graphView);
-        
-        if(save)
+
+        if (save)
             saveUtility.SaveGraph(_fileName);
         else
             saveUtility.LoadGraph(_fileName);
@@ -64,7 +81,7 @@ public class DialogueGraph : EditorWindow
     private void OnEnable()
     {
         ConstructGraphView();
-        GenerateToolBar();
+        GenerateToolbar();
     }
 
     private void OnDisable()
@@ -78,7 +95,7 @@ public class DialogueGraph : EditorWindow
         {
             name = "Dialogue Graph"
         };
-        
+
         _graphView.StretchToParentSize();
         rootVisualElement.Add(_graphView);
     }
